@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"journal.codox.cn","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言春节期间家里长期没人，想做个大门口的监控。现在有些不错的“智能”摄像头，能做到有活物报警等，但考虑到未来的扩展性和灵活性，再加上玩票，选择了树莓派。 材料准备采购 树莓派2代B型 raspberry pi2 model B 现货 喜迎春节[交易快照]200.00 包邮 树莓派摄像头500万像素RASPBERRY PI RPI CAMERA OV5647模块[交易快照] 72.90 EDUP E">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Raspberry And Cam">
+<meta property="og:url" content="http://journal.codox.cn/2016/12/17/raspberry-and-cam/index.html">
+<meta property="og:site_name" content="Jacey&#39;s Journal">
+<meta property="og:description" content="前言春节期间家里长期没人，想做个大门口的监控。现在有些不错的“智能”摄像头，能做到有活物报警等，但考虑到未来的扩展性和灵活性，再加上玩票，选择了树莓派。 材料准备采购 树莓派2代B型 raspberry pi2 model B 现货 喜迎春节[交易快照]200.00 包邮 树莓派摄像头500万像素RASPBERRY PI RPI CAMERA OV5647模块[交易快照] 72.90 EDUP E">
+<meta property="og:locale">
+<meta property="og:image" content="http://journal.codox.cn/2016/12/17/raspberry-and-cam/rasp-cam.png">
+<meta property="article:published_time" content="2016-12-17T09:35:39.000Z">
+<meta property="article:modified_time" content="2016-12-17T09:35:39.000Z">
+<meta property="article:author" content="Jacey">
+<meta property="article:tag" content="生活">
+<meta property="article:tag" content="DIY">
+<meta property="article:tag" content="Raspberry">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://journal.codox.cn/2016/12/17/raspberry-and-cam/rasp-cam.png">
+
+
+<link rel="canonical" href="http://journal.codox.cn/2016/12/17/raspberry-and-cam/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh","comments":true,"permalink":"http://journal.codox.cn/2016/12/17/raspberry-and-cam/","path":"2016/12/17/raspberry-and-cam/","title":"Raspberry And Cam"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Raspberry And Cam | Jacey's Journal</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jacey's Journal</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我是乱写的 & 千万别当真</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%90%E6%96%99%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">材料准备</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%87%E8%B4%AD"><span class="nav-number">2.1.</span> <span class="nav-text">采购</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%9C%89"><span class="nav-number">2.2.</span> <span class="nav-text">自有</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.1.</span> <span class="nav-text">树莓派系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.2.</span> <span class="nav-text">更新系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%EF%BC%88%E6%89%A9%E5%B1%95%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E6%89%93%E5%BC%80%E6%91%84%E5%83%8F%E5%A4%B4%E6%A8%A1%E5%9D%97%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">系统配置（扩展文件系统和打开摄像头模块）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">6.</span> <span class="nav-text">其它</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">6.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">6.2.</span> <span class="nav-text">扩展</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jacey</p>
+  <div class="site-description" itemprop="description">IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://journal.codox.cn/2016/12/17/raspberry-and-cam/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jacey">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jacey's Journal">
+      <meta itemprop="description" content="IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留>">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Raspberry And Cam | Jacey's Journal">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Raspberry And Cam
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2016-12-17 17:35:39" itemprop="dateCreated datePublished" datetime="2016-12-17T17:35:39+08:00">2016-12-17</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>春节期间家里长期没人，想做个大门口的监控。现在有些不错的“智能”摄像头，能做到有活物报警等，但考虑到未来的扩展性和灵活性，再加上玩票，选择了树莓派。</p>
+<h1 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h1><h2 id="采购"><a href="#采购" class="headerlink" title="采购"></a>采购</h2><ul>
+<li>树莓派2代B型 raspberry pi2 model B 现货 喜迎春节[交易快照]200.00</li>
+<li>包邮 树莓派摄像头500万像素RASPBERRY PI RPI CAMERA OV5647模块[交易快照] 72.90</li>
+<li>EDUP EP-N8508GS黄金版 迷你USB无线网卡 树莓派专用[交易快照] 27.00</li>
+<li>树莓派摄像头延长线500mm 加长排线 50CM Raspberry Pi camera[交易快照] 3.00</li>
+<li>YS-18 HC-SR501 人体红外感应模块 进口探头 防盗感应开关模块[交易快照] 3.70</li>
+<li>电磁式蜂鸣器5V 采用SOT塑封管 5V有源蜂鸣器 蜂鸣器[交易快照] 0.39</li>
+<li>LED灯实验包 包含10个LED+10个电阻 适合树莓派MCU入门[交易快照] 2.97</li>
+<li>40P 杜邦公头转母头 杜邦线 公对母 面包线 20CM长 40根一排 特价[交易快照] 2.81</li>
+</ul>
+<h2 id="自有"><a href="#自有" class="headerlink" title="自有"></a>自有</h2><ul>
+<li>SD 卡16G</li>
+<li>USB电源转换器</li>
+<li>USB 线</li>
+<li>胶带、双面胶、硬纸壳（给摄像头和人体感觉模块粘了个外壳）</li>
+<li>冰雪聪明才智</li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="树莓派系统"><a href="#树莓派系统" class="headerlink" title="树莓派系统"></a>树莓派系统</h2><p>去<a target="_blank" rel="noopener" href="https://www.raspberrypi.org/downloads/raspbian/">https://www.raspberrypi.org/downloads/raspbian/</a> 下载 RASPBIAN JESSIE 镜像，然后按 <a target="_blank" rel="noopener" href="https://www.raspberrypi.org/documentation/installation/installing-images/README.md">镜像安装说明</a>把下载的 raspbian 写到 SD 卡中，把 sd 卡插入树莓派；把 usb 无线网卡插到树莓派；把网张插入树莓派；把 usb 线插入树莓派，不出意外的话树莓派上的有些灯就亮了，启动了。</p>
+<p>ssh 登陆树莓派（默认主机名是raspberrypi，默认密码是 raspberry），先配置无线网卡，vi 打开文件 &#x2F;etc&#x2F;wpa_supplicant&#x2F;wpa_supplicant.conf，插入下面4行：<br>network&#x3D;{<br>ssid&#x3D;”YOUR_SSID”<br>psk&#x3D;”YOUR_WIFI_PASSWORD”<br>}</p>
+<p>然后试试能否用无线连上。</p>
+<h2 id="更新系统"><a href="#更新系统" class="headerlink" title="更新系统"></a>更新系统</h2><ul>
+<li><p>把更新源换为日本的（日本的感觉比较快）（把所有行注释掉，添加一行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http://ftp.jaist.ac.jp/raspbian jessie main contrib non-free rpi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br><span class="line">sudo rpi-update</span><br><span class="line">sudo apt-get install python-rpi.gpio</span><br><span class="line">sudo apt-get install python3-rpi.gpio</span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="系统配置（扩展文件系统和打开摄像头模块）"><a href="#系统配置（扩展文件系统和打开摄像头模块）" class="headerlink" title="系统配置（扩展文件系统和打开摄像头模块）"></a>系统配置（扩展文件系统和打开摄像头模块）</h2><p>sudo raspi-config<br>选择1 Expand Filesystem，回车<br>选择 5 Enable Camera，Enable，回车<br>然后到主菜单后，按右箭头，选中 Finish 后，回国，是否重启时，选择重启；<br>关机（拔电源）后，把摄像头装上（注意别装在 Dispaly 槽了，两个插口差不多，我为这事搞了一晚上奇怪为何摄像头检测不到呢）</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>把摄像头和人体红外感应模块穿过防盗门，贴在门外，然后把红外感应模块和树莓派连起来；我在树莓派上又装了一个 LED 灯和蜂鸣器<br>下面是代码（python3是现学的，写的比较渣。本来是用的多线程和锁机制，以让录像的同时 led 闪、蜂鸣器响，但不知道为何重复触发时树莓派就死机，就单线程了）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python3</span><br><span class="line"></span><br><span class="line">import RPi.GPIO as GPIO</span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line">import threading</span><br><span class="line"></span><br><span class="line">HCPIN = <span class="number">12</span></span><br><span class="line">LEDPIN = <span class="number">11</span></span><br><span class="line">BUZZPIN = <span class="number">13</span></span><br><span class="line"></span><br><span class="line">phone_dir = <span class="string">&#x27;/mnt/doorkeeper/&#x27;</span></span><br><span class="line">temp_dir = <span class="string">&#x27;/home/pi/temp&#x27;</span></span><br><span class="line"><span class="meta">#mutex = threading.Lock()</span></span><br><span class="line">#log_lock= threading.Lock()</span><br><span class="line"></span><br><span class="line">#初始化</span><br><span class="line">def init():</span><br><span class="line">    GPIO.setwarnings(False)</span><br><span class="line">    GPIO.setmode(GPIO.BOARD)</span><br><span class="line">    GPIO.setup(HCPIN,GPIO.IN)</span><br><span class="line">    GPIO.setup(LEDPIN,GPIO.OUT)</span><br><span class="line">    GPIO.setup(BUZZPIN,GPIO.OUT)</span><br><span class="line"></span><br><span class="line">def capture():</span><br><span class="line"></span><br><span class="line">    mylog(<span class="string">&#x27;prepare start to capture.&#x27;</span>)</span><br><span class="line">    filename=<span class="string">&quot;video-&quot;</span> + time.strftime(<span class="string">&quot;%Y%m%d%H%M%S&quot;</span>, time.localtime()) + <span class="string">&quot;.h264&quot;</span></span><br><span class="line">    h264absfile = os.path.join(temp_dir,filename)</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="keyword">if</span> mutex.acquire(1):</span></span><br><span class="line">    try:</span><br><span class="line">        mylog(<span class="string">&quot;capture start.&quot;</span>)</span><br><span class="line">        os.system(<span class="string">&quot;raspivid  -w 1280 -h 720 -t 15000 -fps 20 -o &quot;</span> + h264absfile )</span><br><span class="line">        mylog(<span class="string">&quot;capture end.&quot;</span>)</span><br><span class="line"></span><br><span class="line">        # 文件存在，开始编码转换为mp4</span><br><span class="line">        <span class="keyword">if</span> os.path.exists(h264absfile):</span><br><span class="line">            subdir = time.strftime(<span class="string">&quot;%Y%m%d&quot;</span>, time.localtime())</span><br><span class="line">            mp4dir = os.path.join(phone_dir, subdir)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> not os.path.exists(mp4dir):</span><br><span class="line">                mylog(<span class="string">&quot;mkdir &quot;</span> + mp4dir)</span><br><span class="line">                os.mkdir(mp4dir)</span><br><span class="line">            mp4filename= filename + <span class="string">&quot;.mp4&quot;</span></span><br><span class="line">            mp4absfile = os.path.join(mp4dir, mp4filename)</span><br><span class="line">            mylog(<span class="string">&quot;encode &quot;</span> + mp4absfile+ <span class="string">&quot; start.&quot;</span>)</span><br><span class="line">            os.system(<span class="string">&quot;MP4Box -quiet -fps 20 -add &quot;</span> + h264absfile + <span class="string">&quot; &quot;</span> + mp4absfile)</span><br><span class="line">            os.remove(h264absfile)</span><br><span class="line">            mylog(<span class="string">&quot;encode h264:&quot;</span> + h264absfile + <span class="string">&quot; to  mp4file:&quot;</span> + mp4absfile + <span class="string">&quot; end.&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            mylog(<span class="string">&quot;encode cancel(file &quot;</span> + h264absfile + <span class="string">&quot; not exists.&quot;</span>)</span><br><span class="line">    finally:</span><br><span class="line">        pass</span><br><span class="line">      <span class="meta">#      mutex.release()</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="keyword">else</span>:</span></span><br><span class="line">    <span class="meta">#    mylog(<span class="string">&quot;acquire lock fail, capture cancel.&quot;</span>)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#感应器侦测函数</span><br><span class="line">def detct():</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>):</span><br><span class="line">        <span class="meta">#normal()</span></span><br><span class="line">        #如果感应器针脚输出为True，则打印信息并执行蜂鸣器函数</span><br><span class="line">        <span class="keyword">if</span> GPIO.input(HCPIN) == True:</span><br><span class="line">            mylog(<span class="string">&quot;somebody there!&quot;</span>)</span><br><span class="line">            shine(<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="meta">#mylog(<span class="string">&quot;none&quot;</span>)</span></span><br><span class="line">            time.sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def shine(t):</span><br><span class="line">    #t1 = threading.Thread(target=capture)</span><br><span class="line">    #t1.start()</span><br><span class="line"></span><br><span class="line">    trys = <span class="type">int</span>(t) * <span class="number">1</span>;</span><br><span class="line">    try:</span><br><span class="line">        <span class="keyword">while</span> trys &gt; <span class="number">0</span>:</span><br><span class="line">            GPIO.output(LEDPIN,GPIO.HIGH)</span><br><span class="line">            GPIO.output(BUZZPIN,GPIO.HIGH)</span><br><span class="line">            time.sleep(<span class="number">0.1</span>)</span><br><span class="line">            GPIO.output(LEDPIN,GPIO.LOW)</span><br><span class="line">            GPIO.output(BUZZPIN,GPIO.LOW)</span><br><span class="line">            time.sleep(<span class="number">0.1</span>)</span><br><span class="line">            trys -= <span class="number">1</span></span><br><span class="line">        ## 获取</span><br><span class="line">        capture()</span><br><span class="line">    finally:</span><br><span class="line">        GPIO.output(LEDPIN,GPIO.LOW)</span><br><span class="line">        GPIO.output(BUZZPIN,GPIO.LOW)</span><br><span class="line"></span><br><span class="line">def normal():</span><br><span class="line">    mount_nfs_flag = os.popen(<span class="string">&quot;mount -l | grep doorkeeper | wc -l&quot;</span>).read()</span><br><span class="line">    mount_nfs_flag = <span class="type">int</span>(mount_nfs_flag)</span><br><span class="line">    <span class="keyword">if</span> mount_nfs_flag  &lt;= <span class="number">0</span>:</span><br><span class="line">        mylog(<span class="string">&quot;mount fail? remount nfs&quot;</span>)</span><br><span class="line">        os.system(<span class="string">&quot;sudo mount.nfs 192.168.0.117:/volume1/doorkeeper /mnt/doorkeeper -o nolock&quot;</span>)</span><br><span class="line"></span><br><span class="line">    min=<span class="type">int</span>(time.strftime(<span class="string">&quot;%M&quot;</span>))</span><br><span class="line">    sec=<span class="type">int</span>(time.strftime(<span class="string">&quot;%S&quot;</span>))</span><br><span class="line">    <span class="keyword">if</span> min % <span class="number">10</span> == <span class="number">0</span> and sec % <span class="number">60</span> &lt;= <span class="number">4</span> :</span><br><span class="line">        t1 = threading.Thread(target=capture)</span><br><span class="line">        t1.start()</span><br><span class="line"></span><br><span class="line">        trys = <span class="number">2</span></span><br><span class="line">        <span class="keyword">while</span> trys &gt; <span class="number">0</span>:</span><br><span class="line">            GPIO.output(LEDPIN,GPIO.HIGH)</span><br><span class="line">            GPIO.output(BUZZPIN,GPIO.HIGH)</span><br><span class="line">            time.sleep(<span class="number">0.25</span>)</span><br><span class="line">            GPIO.output(LEDPIN,GPIO.LOW)</span><br><span class="line">            GPIO.output(BUZZPIN,GPIO.LOW)</span><br><span class="line">            time.sleep(<span class="number">0.25</span>)</span><br><span class="line">            trys -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line">def mylog(l):</span><br><span class="line">    <span class="meta">#<span class="keyword">if</span> log_lock.acquire(5):</span></span><br><span class="line">        try:</span><br><span class="line">            print(time.strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>), l)</span><br><span class="line">            f = open(<span class="string">&#x27;/var/log/doorkeep.log&#x27;</span>, <span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">            f.write(time.strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S &quot;</span>) + l + <span class="string">&quot;\n&quot;</span>)</span><br><span class="line">            f.close()</span><br><span class="line">        finally:</span><br><span class="line">            pass</span><br><span class="line">     #       log_lock.release()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">time.sleep(<span class="number">5</span>)</span><br><span class="line">init()</span><br><span class="line">shine(<span class="number">2</span>)</span><br><span class="line">detct()</span><br><span class="line"></span><br><span class="line">GPIO.cleanup()</span><br></pre></td></tr></table></figure>
+
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><p>上门的效果，外壳好黑好丑（没找到合适的壳）：</p>
+<p><img src="/2016/12/17/raspberry-and-cam/rasp-cam.png" alt="上门效果"></p>
+<p>下面是拍到的打扫楼道的阿姨。发现物业较差，好几天才打扫一次。</p>
+<h1 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>这个摄像头不是鱼眼摄像头，范围有限；在楼道较暗，如果楼道的声控灯没开，效果很差。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>可以通过 bypy 把文件同步到云盘。可以写个 app，有人时发送消息，查看录像；可接个 mic 和小喇叭来对话；可换个鱼眼+红外摄像头；可再接个陀机。</p>
+<p>看来，得搞台 ECS了。。。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E6%B4%BB/" rel="tag"># 生活</a>
+              <a href="/tags/DIY/" rel="tag"># DIY</a>
+              <a href="/tags/Raspberry/" rel="tag"># Raspberry</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/12/10/hi/" rel="prev" title="hi">
+                  <i class="fa fa-chevron-left"></i> hi
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/22/about-create-dns-server/" rel="next" title="有关自建DNS服务器并创建DNS名字">
+                  有关自建DNS服务器并创建DNS名字 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jacey</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

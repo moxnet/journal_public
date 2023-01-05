@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"journal.codox.cn","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="maven 的生命周期Maven 的生命周期就是为了对所有的构建过程进行抽象和统一。用maven在构建时，有三套生命周期：  clean default site  这三套生命周期，涵盖了项目的清理、编译、测试、打包、部署等。 各周期的阶段clean周期在clean周期内，有以下三个阶段(phase)，意义如其phase的名字：  pre-clean clean post-clean  defau">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven-life-cycle">
+<meta property="og:url" content="http://journal.codox.cn/2017/10/07/maven-life-cycle/index.html">
+<meta property="og:site_name" content="Jacey&#39;s Journal">
+<meta property="og:description" content="maven 的生命周期Maven 的生命周期就是为了对所有的构建过程进行抽象和统一。用maven在构建时，有三套生命周期：  clean default site  这三套生命周期，涵盖了项目的清理、编译、测试、打包、部署等。 各周期的阶段clean周期在clean周期内，有以下三个阶段(phase)，意义如其phase的名字：  pre-clean clean post-clean  defau">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-10-07T12:50:45.000Z">
+<meta property="article:modified_time" content="2017-10-07T12:50:45.000Z">
+<meta property="article:author" content="Jacey">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="maven">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://journal.codox.cn/2017/10/07/maven-life-cycle/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh","comments":true,"permalink":"http://journal.codox.cn/2017/10/07/maven-life-cycle/","path":"2017/10/07/maven-life-cycle/","title":"maven-life-cycle"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>maven-life-cycle | Jacey's Journal</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jacey's Journal</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我是乱写的 & 千万别当真</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#maven-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.</span> <span class="nav-text">maven 的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E5%91%A8%E6%9C%9F%E7%9A%84%E9%98%B6%E6%AE%B5"><span class="nav-number">1.1.</span> <span class="nav-text">各周期的阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clean%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">clean周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#default%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">default周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#site"><span class="nav-number">1.1.3.</span> <span class="nav-text">site</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%92%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.4.</span> <span class="nav-text">命令行和生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E7%BB%91%E5%AE%9A"><span class="nav-number">1.2.</span> <span class="nav-text">插件的目标和绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#test%E5%91%A8%E6%9C%9F%E5%86%85%E7%9A%84%E9%BB%98%E8%AE%A4%E7%BB%91%E5%AE%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">test周期内的默认绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#default%E5%91%A8%E6%9C%9F%E7%9A%84%E9%BB%98%E8%AE%A4%E7%BB%91%E5%AE%9A"><span class="nav-number">1.2.2.</span> <span class="nav-text">default周期的默认绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#site%E5%91%A8%E6%9C%9F%E7%9A%84%E7%BB%91%E5%AE%9A"><span class="nav-number">1.2.3.</span> <span class="nav-text">site周期的绑定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%92%8C%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%91%A8%E6%9C%9F%E7%9B%B8%E5%85%B3%E7%9A%84"><span class="nav-number">1.3.</span> <span class="nav-text">其它和插件及周期相关的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B4%E6%8E%A5%E8%BF%90%E8%A1%8C%E6%8F%92%E4%BB%B6%E7%9B%AE%E6%A0%87"><span class="nav-number">1.3.1.</span> <span class="nav-text">从命令行直接运行插件目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="nav-number">1.3.2.</span> <span class="nav-text">插件的解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%89%8D%E7%BC%80"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">插件前缀</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#version%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">version的解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%B8%AE%E5%8A%A9"><span class="nav-number">1.3.3.</span> <span class="nav-text">获取帮助</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jacey</p>
+  <div class="site-description" itemprop="description">IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://journal.codox.cn/2017/10/07/maven-life-cycle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jacey">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jacey's Journal">
+      <meta itemprop="description" content="IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留>">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="maven-life-cycle | Jacey's Journal">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          maven-life-cycle
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-10-07 20:50:45" itemprop="dateCreated datePublished" datetime="2017-10-07T20:50:45+08:00">2017-10-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="maven-的生命周期"><a href="#maven-的生命周期" class="headerlink" title="maven 的生命周期"></a>maven 的生命周期</h1><p>Maven 的生命周期就是为了对所有的构建过程进行抽象和统一。用maven在构建时，有三套生命周期：</p>
+<ul>
+<li>clean</li>
+<li>default</li>
+<li>site</li>
+</ul>
+<p>这三套生命周期，涵盖了项目的清理、编译、测试、打包、部署等。</p>
+<h2 id="各周期的阶段"><a href="#各周期的阶段" class="headerlink" title="各周期的阶段"></a>各周期的阶段</h2><h3 id="clean周期"><a href="#clean周期" class="headerlink" title="clean周期"></a>clean周期</h3><p>在clean周期内，有以下三个阶段(phase)，意义如其phase的名字：</p>
+<ul>
+<li>pre-clean</li>
+<li>clean</li>
+<li>post-clean</li>
+</ul>
+<h3 id="default周期"><a href="#default周期" class="headerlink" title="default周期"></a>default周期</h3><p>default周期是最重要的周期，主要有几下几个阶段：</p>
+<ul>
+<li>validate</li>
+<li>initialize</li>
+<li>generate-sources</li>
+<li>process-sources</li>
+<li>generate-resources</li>
+<li>process-resources</li>
+<li>compile</li>
+<li>process-classes</li>
+<li>generate-test-sources</li>
+<li>process-test-sources</li>
+<li>generate-test-resources</li>
+<li>process-test-resources</li>
+<li>test-compile</li>
+<li>process-test-classes</li>
+<li>test</li>
+<li>prepare-package</li>
+<li>package</li>
+<li>pre-integration-test</li>
+<li>integration-test</li>
+<li>post-integration-test</li>
+<li>verify</li>
+<li>install</li>
+<li>deploy</li>
+</ul>
+<h3 id="site"><a href="#site" class="headerlink" title="site"></a>site</h3><p>site主要是用来发布站点，有以下3个phase:</p>
+<ul>
+<li>pre-site</li>
+<li>site</li>
+<li>post-site</li>
+<li>site-deploy，将生成的项目站点发布到远程服务器上</li>
+</ul>
+<h3 id="命令行和生命周期"><a href="#命令行和生命周期" class="headerlink" title="命令行和生命周期"></a>命令行和生命周期</h3><p>默认的mvn clean，执行的是test周期的pre-clean、clean阶段。</p>
+<p>mvn test，是执行的默认周期的validate直到test阶段。</p>
+<p>mvn clean install，是执行的test周期的pre-clean、clean，以及default周期的validate直到install阶段。</p>
+<h2 id="插件的目标和绑定"><a href="#插件的目标和绑定" class="headerlink" title="插件的目标和绑定"></a>插件的目标和绑定</h2><p>maven定义了项目的周期，但具体的周期的执行并不是maven自己来做，而是交给了众多的插件来完成的。比如maven-depedency-plugin就能分期项目的依赖关系。</p>
+<p>maven的生命周期，和插件的目标相互绑定，才能完全相关的任务。如maven-compiler-plugin的compile目标，绑定（也在默认情况下绑定了）default周期的compile周期，就能完成项目的编译任务。maven内置了这么多插件的绑定。</p>
+<h3 id="test周期内的默认绑定"><a href="#test周期内的默认绑定" class="headerlink" title="test周期内的默认绑定"></a>test周期内的默认绑定</h3><p>在test周期内，有maven-test-plugin绑定了部分test周期的阶段，如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">阶段</th>
+<th align="left">目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pre-test</td>
+<td align="left">无</td>
+</tr>
+<tr>
+<td align="left">test</td>
+<td align="left">maven-test-plugin:test</td>
+</tr>
+<tr>
+<td align="left">post-test</td>
+<td align="left">无</td>
+</tr>
+</tbody></table>
+<h3 id="default周期的默认绑定"><a href="#default周期的默认绑定" class="headerlink" title="default周期的默认绑定"></a>default周期的默认绑定</h3><p>default周期，因使用的打包类型不同，默认绑定的插件周和周期也不同（如jar、war、pom、maven-plugin、ear等）。如jar&#x2F;war包的默认绑定如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">周期</th>
+<th align="left">目标</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">process-resources</td>
+<td align="left">maven-resources-plugin:resources</td>
+<td align="left">复制主资源到主输出目录</td>
+</tr>
+<tr>
+<td align="left">compile</td>
+<td align="left">maven-compiler-plugin:compile</td>
+<td align="left">编译代码到主输出目录</td>
+</tr>
+<tr>
+<td align="left">process-test-resources</td>
+<td align="left">maven-resources-plugin:testResources</td>
+<td align="left">复制测试资源到测试输出目录</td>
+</tr>
+<tr>
+<td align="left">test-compile</td>
+<td align="left">maven-compiler-plugin:testCompile</td>
+<td align="left">编译测试代码到测试输出目录</td>
+</tr>
+<tr>
+<td align="left">test</td>
+<td align="left">maven-surefire-plugin:test</td>
+<td align="left">测试</td>
+</tr>
+<tr>
+<td align="left">package</td>
+<td align="left">maven-jar-plugin:jar</td>
+<td align="left">创建项目的jar包</td>
+</tr>
+<tr>
+<td align="left">install</td>
+<td align="left">maven-install-plugin:install</td>
+<td align="left">将输出的项目构件到本地仓库</td>
+</tr>
+<tr>
+<td align="left">deploy</td>
+<td align="left">maven-deploy-plugin:deploy</td>
+<td align="left">将位置子网的构件发布到远程仓库</td>
+</tr>
+</tbody></table>
+<h3 id="site周期的绑定"><a href="#site周期的绑定" class="headerlink" title="site周期的绑定"></a>site周期的绑定</h3><table>
+<thead>
+<tr>
+<th align="left">阶段</th>
+<th align="left">目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pre-site</td>
+<td align="left">无</td>
+</tr>
+<tr>
+<td align="left">site</td>
+<td align="left">maven-site-plugin:site</td>
+</tr>
+<tr>
+<td align="left">post-site</td>
+<td align="left">无</td>
+</tr>
+<tr>
+<td align="left">deploy</td>
+<td align="left">maven-site-plugin:deploy</td>
+</tr>
+</tbody></table>
+<h2 id="其它和插件及周期相关的"><a href="#其它和插件及周期相关的" class="headerlink" title="其它和插件及周期相关的"></a>其它和插件及周期相关的</h2><h3 id="从命令行直接运行插件目标"><a href="#从命令行直接运行插件目标" class="headerlink" title="从命令行直接运行插件目标"></a>从命令行直接运行插件目标</h3><p>一般是通过mvn运行maven生命周期中的阶段(phase)，间接运行phase绑定了插件对应的目标(goal)。我们也可以直接运行插件的目标，如下就是运行maven-dependency-plugin插件的tree目标：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:tree   # 这儿可简写为 mvn dependency:tree</span><br><span class="line">[INFO] Scanning for projects...</span><br><span class="line">[INFO]</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] Building Archetype - demo-mvn 1.0-SNAPSHOT</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO]</span><br><span class="line">[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ demo-mvn ---</span><br><span class="line">[INFO] net.codox.demo:demo-mvn:jar:1.0-SNAPSHOT</span><br><span class="line">[INFO] \- org.springframework:spring-aop:jar:3.1.0.RELEASE:compile</span><br><span class="line">[INFO]    +- aopalliance:aopalliance:jar:1.0:compile</span><br><span class="line">[INFO]    +- org.springframework:spring-asm:jar:3.1.0.RELEASE:compile</span><br><span class="line">[INFO]    +- org.springframework:spring-beans:jar:3.1.0.RELEASE:compile</span><br><span class="line">[INFO]    \- org.springframework:spring-core:jar:3.1.0.RELEASE:compile</span><br><span class="line">[INFO]       \- commons-logging:commons-logging:jar:1.1.1:compile</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] BUILD SUCCESS</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] Total time: 1.198 s</span><br><span class="line">[INFO] Finished at: 2017-10-07T22:17:11+08:00</span><br><span class="line">[INFO] Final Memory: 7M/81M</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<h3 id="插件的解析"><a href="#插件的解析" class="headerlink" title="插件的解析"></a>插件的解析</h3><p>上节的命令 mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:tree 可简写为 mvn dependency:tree，即插件的groupId:artifactId:version，直接简写成了dependency，这个是使用了插件前缀来简写的。</p>
+<ul>
+<li>插件也有仓库，和配置maven仓库的repositories一样，只是插件仓库的配置项为pluginRepositories。一般不需要配置自己的插件仓库。</li>
+<li>如果在pom文件中配置插件时（build标签内），如果是官方插件（即groupId为org.apache.maven.plugins），则可省略groupId。</li>
+</ul>
+<p>根据坐标定位插件，需要其groupId:artifactId:version三项，具体的解析如下：</p>
+<h4 id="插件前缀"><a href="#插件前缀" class="headerlink" title="插件前缀"></a>插件前缀</h4><p>插件前缀和groupId:artifactId是一一对应的，这个写在仓库的无数据中的groupId&#x2F;maven-metadata.xml中。如maven的官方插件的maven-metadata.xml中列举了其对应的插件前缀：<a target="_blank" rel="noopener" href="http://repo1.maven.org/maven2/org/apache/maven/plugins/maven-metadata.xml">http://repo1.maven.org/maven2/org/apache/maven/plugins/maven-metadata.xml</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">metadata</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Apache Maven ACR Plugin<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">prefix</span>&gt;</span>acr<span class="tag">&lt;/<span class="name">prefix</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-acr-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- ***** --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Apache Maven Dependency Plugin<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">prefix</span>&gt;</span>dependency<span class="tag">&lt;/<span class="name">prefix</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-dependency-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- ***** --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">metadata</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="version的解析"><a href="#version的解析" class="headerlink" title="version的解析"></a>version的解析</h4><p>当没写version时，maven会自动解析。分两种情况：</p>
+<ul>
+<li>maven的内置超级pom文件，为核心插件设置了版本。如果使用的插件是这类，则已经内置了版本号。</li>
+<li>对非核心插件，会去检查仓库中的可用版本（获取插件的meta信息），并做出选择。meta信息中有latest版本、release版本的值。对于maven 2，则会使用latest版本（即最新版本，有可能是SNAPSHOT版，也即可能有风险），在maven 3中，使用relaese版本（即最近的发布版）</li>
+</ul>
+<h3 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h3><p>最方便的为使用maven-help-plugin来获取插件的信息，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mvn <span class="built_in">help</span>:describe -Dplugin=org.apache.maven.plugins:maven-compiler-plugin:2.1.4   <span class="comment"># 完整写法</span></span><br><span class="line">mvn <span class="built_in">help</span>:describe -Dplugin=org.apache.maven.plugins:maven-compiler-plugin         <span class="comment"># 简化版本，这样使用最新版来描述</span></span><br><span class="line">mvn <span class="built_in">help</span>:describe -Dplugin=compiler                                               <span class="comment"># 简化坐标为插件前缀</span></span><br><span class="line">mvn <span class="built_in">help</span>:describe -Dplugin=compiler -Ddetail                                      <span class="comment"># 更详细信息</span></span><br></pre></td></tr></table></figure>
+
+<p>对于maven的插件，可去官方网站寻找资料： <a target="_blank" rel="noopener" href="http://maven.apache.org/plugins/index.html">maven插件官网</a></p>
+<p>对于以前大师的codehaus的插件，好像这个站在2015年关了。新的替代者: <a target="_blank" rel="noopener" href="http://www.mojohaus.org/plugins.html">MojoHaus</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/maven/" rel="tag"># maven</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/09/10/multi-thread-coutdownlatch/" rel="prev" title="多进程组件之CountDownLatch">
+                  <i class="fa fa-chevron-left"></i> 多进程组件之CountDownLatch
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/01/24/javascript-object/" rel="next" title="Javascript之对象基础">
+                  Javascript之对象基础 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jacey</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

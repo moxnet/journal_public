@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"journal.codox.cn","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要今天有个兄弟公司咨询我有关迁移DNS的技术相关的事情，了解如何做准备，如何能稳妥的把DNS由第三方服务商迁移到自建的DNS上。最近可能一是由于大公司对DNS解析安全越来越重视，或者最近DNS攻击越来越严重，可能觉得自己维护DNS解析更有底气。但迁移DNS这件事，有时候会比较复杂，并且容易出错（更多的是不平滑，在迁移过程中网站访问有时好有时坏、有的地区好有的地区不好）。 由于域名解析是个从上到下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有关自建DNS服务器并创建DNS名字">
+<meta property="og:url" content="http://journal.codox.cn/2016/12/22/about-create-dns-server/index.html">
+<meta property="og:site_name" content="Jacey&#39;s Journal">
+<meta property="og:description" content="摘要今天有个兄弟公司咨询我有关迁移DNS的技术相关的事情，了解如何做准备，如何能稳妥的把DNS由第三方服务商迁移到自建的DNS上。最近可能一是由于大公司对DNS解析安全越来越重视，或者最近DNS攻击越来越严重，可能觉得自己维护DNS解析更有底气。但迁移DNS这件事，有时候会比较复杂，并且容易出错（更多的是不平滑，在迁移过程中网站访问有时好有时坏、有的地区好有的地区不好）。 由于域名解析是个从上到下">
+<meta property="og:locale">
+<meta property="article:published_time" content="2016-12-22T15:00:00.000Z">
+<meta property="article:modified_time" content="2016-12-22T15:00:00.000Z">
+<meta property="article:author" content="Jacey">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="Internet">
+<meta property="article:tag" content="技术">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://journal.codox.cn/2016/12/22/about-create-dns-server/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh","comments":true,"permalink":"http://journal.codox.cn/2016/12/22/about-create-dns-server/","path":"2016/12/22/about-create-dns-server/","title":"有关自建DNS服务器并创建DNS名字"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>有关自建DNS服务器并创建DNS名字 | Jacey's Journal</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jacey's Journal</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我是乱写的 & 千万别当真</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="nav-number">2.</span> <span class="nav-text">名词解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E5%B1%80-x2F-%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E7%AE%A1%E7%90%86%E6%9C%BA%E6%9E%84"><span class="nav-number">2.0.1.</span> <span class="nav-text">注册局&#x2F;域名注册管理机构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E5%95%86-x2F-%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1%E6%9C%BA%E6%9E%84"><span class="nav-number">2.0.2.</span> <span class="nav-text">注册商&#x2F;域名注册服务机构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B6%E7%BA%A7%E5%9F%9F"><span class="nav-number">2.0.3.</span> <span class="nav-text">顶级域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BC%80"><span class="nav-number">2.0.4.</span> <span class="nav-text">后缀</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D"><span class="nav-number">2.0.5.</span> <span class="nav-text">域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%9C%BA%E8%AE%B0%E5%BD%95"><span class="nav-number">2.0.6.</span> <span class="nav-text">主机记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hostObject-x2F-dns%E8%AE%B0%E5%BD%95"><span class="nav-number">2.0.7.</span> <span class="nav-text">hostObject&#x2F;dns记录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%AA%E8%87%AA%E5%BB%BA"><span class="nav-number">3.1.</span> <span class="nav-text">伪自建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%BB%BADNS"><span class="nav-number">3.2.</span> <span class="nav-text">自建DNS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%BB%BADNS-%E5%85%B1%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">自建DNS-共用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">其它问题</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jacey</p>
+  <div class="site-description" itemprop="description">IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://journal.codox.cn/2016/12/22/about-create-dns-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jacey">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jacey's Journal">
+      <meta itemprop="description" content="IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留>">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="有关自建DNS服务器并创建DNS名字 | Jacey's Journal">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          有关自建DNS服务器并创建DNS名字
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2016-12-22 23:00:00" itemprop="dateCreated datePublished" datetime="2016-12-22T23:00:00+08:00">2016-12-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>今天有个兄弟公司咨询我有关迁移DNS的技术相关的事情，了解如何做准备，如何能稳妥的把DNS由第三方服务商迁移到自建的DNS上。最近可能一是由于大公司对DNS解析安全越来越重视，或者最近DNS攻击越来越严重，可能觉得自己维护DNS解析更有底气。但迁移DNS这件事，有时候会比较复杂，并且容易出错（更多的是不平滑，在迁移过程中网站访问有时好有时坏、有的地区好有的地区不好）。</p>
+<p>由于域名解析是个从上到下的过程（DNS系统可以说是全球最庞大、最基础的“云”服务），不但要了解如何搭建DNS，还要和注册商打交交道，以及碰到问题时如何排查。尤其是当自己使用的ns名称不存在时，可能要创建NS的名字。</p>
+<h1 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h1><p>通用的来讲DNS就是解析，但在DNS行业内，要用更细化的名字。在这里我解释的可能不太准确，但目的是用大家能理解的词简单解释一下，更细的请参阅技术书籍或手册：</p>
+<h3 id="注册局-x2F-域名注册管理机构"><a href="#注册局-x2F-域名注册管理机构" class="headerlink" title="注册局&#x2F;域名注册管理机构"></a>注册局&#x2F;域名注册管理机构</h3><p>每个域名的tld由一家注册局来负责运营，如.com类域名由Verisign负责，.cn域名由CNNIC负责。注册局接收注册商的请求来管理domain、contact和host</p>
+<h3 id="注册商-x2F-域名注册服务机构"><a href="#注册商-x2F-域名注册服务机构" class="headerlink" title="注册商&#x2F;域名注册服务机构"></a>注册商&#x2F;域名注册服务机构</h3><p>接收最终用户的请求，并向注册局注册和管理域名。我们注册域名，一直是向注册商注册，注册商有系统与注册局通信。</p>
+<h3 id="顶级域"><a href="#顶级域" class="headerlink" title="顶级域"></a>顶级域</h3><p>域名是由右向左以“.”分割的符号，越往右级别越高。一个顶级域有相应的注册局来运营和管理。如cn就是一个顶级域。</p>
+<h3 id="后缀"><a href="#后缀" class="headerlink" title="后缀"></a>后缀</h3><p>一个顶级域，可能有多个域名后缀，一个域名后缀＋一个个性字符，就能组成一个域名。如cn、com.cn、net.cn均是域名后缀。</p>
+<h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>一组字符+域名后缀，组成一个域名。如codox.cn、codox.net、foo.com.cn、bar.org.cn等。</p>
+<h3 id="主机记录"><a href="#主机记录" class="headerlink" title="主机记录"></a>主机记录</h3><p>域名之后，可以创建多个解析记录，可用于web站点等，如journal.codox.cn。又叫完全限定名（fully qualified domain name,FQDN）</p>
+<h3 id="hostObject-x2F-dns记录"><a href="#hostObject-x2F-dns记录" class="headerlink" title="hostObject&#x2F;dns记录"></a>hostObject&#x2F;dns记录</h3><p>域名(主域名，不是指主机记录)使用的NS，如codox.cn使用的是dns7.hichina.com和dns8.hichina.com</p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>对于有可能涉及到以下几种：</p>
+<ul>
+<li>伪自建：不走寻常路，自己用的域名后缀比较奇特，注册后修改DNS为第三方&#x2F;或以前的自建的解析服务器时时，报“DNS服务器不合法”之类错误</li>
+<li>自建DNS，NS服务解析自己的域名：如自己的域名为codox.cn，使用的DNS为ns1.codox.cn&#x2F;ns2.codox.cn</li>
+<li>自建DNS，但有多个不同后缀的域名，使用同一组DNS</li>
+</ul>
+<h2 id="伪自建"><a href="#伪自建" class="headerlink" title="伪自建"></a>伪自建</h2><p>有时候会碰到客户申请了域名foo.site域名做个人网站，使用第三方解析，如ns1.myns.com&#x2F;ns2.myns.com。但在注册商处修改foo.site的DNS为ns1.myns.com&#x2F;ns2.myns.com时报错，提示“DNS不合法”、”DNS不存在”之类的。com后缀的域名使用这组DNS没事，site域名就不行？为什么呢？</p>
+<p>域名在使用某个DNS时，必须要通过注册商在注册局注册、必须要通过注册商在注册局注册、必须要通过注册商在注册局注册。如foo.site域名要使用ns1.myns.com这个DNS，必须要有注册商在<strong>site注册局</strong>注册一下ns1.myns.com这个DNS(注册时只需要填写这个ns1.myns.com名字即可，不需要额外信息)。只要有一个注册商在site注册局注册过后，以后任何***.site域名均可以使用ns1.myns.com这个ns了。你懂的，ns2.myns.com类似。</p>
+<p>有的同学可能发现，这个ns(.com)的后缀和用这个ns的域名的后缀(.site)不同，这类情况在注册ns时不需要填写ns对应的服务器的ip，纯报备，所以部分注册商对这个流程进行了优化：<em>当有人用这种跨后缀的ns时，如果域名所有的注册局不存在，就注册一下。</em></p>
+<p>当然，为什么要注册，要走这个流程？反正ns1.myns.com这个NS也不会写入site的顶级域DNS系统，为何多此一举？我也觉得烦琐，多此一举，但这是域名注册系统的标准(EPP)规定的。</p>
+<h2 id="自建DNS"><a href="#自建DNS" class="headerlink" title="自建DNS"></a>自建DNS</h2><p>有的大公司，或有技术追求想自己搭建dns做自己域名的解析的，可能会有此需求。我们以我的域名来做例子：</p>
+<p>1.　域名：codox.cn，域名已经注册。<br>2.　使用的DNS：ns1.codox.cn、ns2.codox.cn，尚未创建。<br>3.　DNS服务器2台，ip分别为:1.1.1.1、2.2.2.2。服务器已经购买。</p>
+<p><strong>创建hostObject</strong></p>
+<p>这是第一步：要向cn注册局注册ns1.codox.cn和ns2.codox.cn这两个DNS，并创建dns对应的ip。</p>
+<p>如何创建？每家注册商的操作方式不同，以阿里云和godaddy为例子说明：</p>
+<p> <strong>在阿里云创建hostObject</strong></p>
+<p>在阿里云创建hostObject，叫“域名服务器注册”。位置：登陆控制台后，在左侧点击“域名”打开域名列表，点击codox.cn域名后面的“管理”打开域名控制台（就是打开管理解析记录的那儿后，点击页面上方导航栏的“基本管理”）。在域名控制台，点击左侧的“DNS修改&#x2F;创建”，右侧会看到有个“域名服务器注册&#x2F;修改”的按钮，点进去后就有注册的位置了。以我的例子，要选择“解析国内英文域名”</p>
+<p> <strong>在godaddy创建hostObject</strong></p>
+<p>在godaddy(中文界面)叫“创建主机名”，在控制面板点击域名进行域名详情的“设置”标签，下面有个“主机名”栏目，点击“管理”可看到已添加的hostObject，当然也可以创建。</p>
+<p><strong>修改DNS</strong></p>
+<p>兵分两路，创建dns的同时，可能要同步搭建dns服务器上的解析服务器软件，如bind。此处blabla相信老司机很熟悉了。</p>
+<p>创建后，除了要添加<a target="_blank" rel="noopener" href="http://www.codox.cn.、jounal.codox.cn.等解析记录外,**一定要记得添加下面的几条记录,否则域名会不正常/">www.codox.cn.、jounal.codox.cn.等解析记录外，**一定要记得添加下面的几条记录，否则域名会不正常</a>**</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">codox.cn.		IN	NS	ns1.codox.cn.</span><br><span class="line">codox.cn.		IN	NS	ns2.codox.cn.</span><br><span class="line">ns1.codox.cn.	IN	A	1.1.1.1</span><br><span class="line">ns2.codox.cn.	IN	A	2.2.2.2</span><br></pre></td></tr></table></figure>
+
+<p>添加完后，运行以下命令看这正常不：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dig		codox.cn	NS	@1.1.1.1</span><br><span class="line">dig		codox.cn	NS	@2.2.2.2</span><br><span class="line">dig		ns1.codox.cn	@1.1.1.1</span><br><span class="line">dig		ns2.codox.cn	@1.1.1.1</span><br><span class="line">dig		ns1.codox.cn	@2.2.2.2</span><br><span class="line">dig		ns2.codox.cn	@2.2.2.2</span><br><span class="line">dig		othe.your.record.codox.cn	@1.1.1.1</span><br></pre></td></tr></table></figure>
+
+<p>以上检查确认没问题后，就可以在注册商处修改域名的NS记录为ns1.codox.cn和ns2.codox.cn了。</p>
+<p>注意：<strong>修改后，原来的dns服务器上的解析记录在48小时内不要删除，并且保持上面的解析记录正确。</strong></p>
+<h2 id="自建DNS-共用"><a href="#自建DNS-共用" class="headerlink" title="自建DNS-共用"></a>自建DNS-共用</h2><p>如果上面codox.cn使用了ns1&#x2F;2.codox.cn这组dns后，我又注册了个codox.net域名，也要同样使用ns1&#x2F;2.codox.cn，怎么办呢？要在.net注册局创建hostObject，因为只要我用了这组dns，别人的net域名肯定没用过，也肯定没人帮我创建过。所以我的codox.net域名使用这组dns，就要在.net的注册局创建这组dns（其实是报备吧）。但如何创建呢？分两种：</p>
+<p>1.　需要手工创建。对于需要手工创建的，由用codox.cn这个域名的账号登陆，管理codox.cn这个域名，按上述的“创建hostObject”的方式创建dns，并且用途要用于解析“.net域名”。<br>2.　自动创建。对于有些注册商，你使用的这种交叉注册局的ns，如果在.net注册局不存在ns1.codox.cn，会自动创建。如godaddy。</p>
+<h1 id="其它问题"><a href="#其它问题" class="headerlink" title="其它问题"></a>其它问题</h1><ul>
+<li>一个域名可以使用几个NS?<br>最多可以写13个ns，如google.com就用了13个ns名字。</li>
+<li>一个ns可以使用多个ip吗？<br>可以，最多可以使用13个IP。并且可以添加ipv6地址。</li>
+<li>我的自建dns工作正常，使用这个dns的域名的网站也能访问，但dig mydomain.com ns时，就是不返回ns记录，为什么？<br>你的域名在注册局的dns中，把域名正常授权给了您的自建dns。但你的自建dns中，mydomain.com NS记录没写。在dig或nslookup时，当从顶级域的dns中获取到mydomain.com NS ns*.mydomain.com后，仍会去ns*.mydomain.com上查询一次mydomain.com的NS记录，如果没写就返回空了。但一般<a target="_blank" rel="noopener" href="http://www.mydomain.com的主机记录能正常使用,网站能正常访问./">www.mydomain.com的主机记录能正常使用，网站能正常访问。</a></li>
+<li>什么样的hostObject注册时需要填写ip，什么样的不需要？<br>当dns名字的后缀，和将要使用这个ns的域名-的后缀，两个后缀归同一家注册局时，就必须要填写ip，且要这个域名的持有人才能注册。否则就不需要填写ip，任何注册商都可以。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DNS/" rel="tag"># DNS</a>
+              <a href="/tags/Internet/" rel="tag"># Internet</a>
+              <a href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag"># 技术</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/12/17/raspberry-and-cam/" rel="prev" title="Raspberry And Cam">
+                  <i class="fa fa-chevron-left"></i> Raspberry And Cam
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/31/bye-2016/" rel="next" title="hi">
+                  hi <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jacey</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

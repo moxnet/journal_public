@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"journal.codox.cn","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="对象创建对象的两种方式： 12345let user &#x3D; new Object(); &#x2F;&#x2F; 构造函数法let user &#x3D; &amp;#123;	name: &quot;Tom&quot;,	age: 20,&amp;#125;;                 &#x2F;&#x2F; 健&#x2F;值  属性的访问和设置值，删除变量，有两种方式： 12345678910111213141516&#x2F;&#x2F; method 1:user.name &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript之对象基础">
+<meta property="og:url" content="http://journal.codox.cn/2021/01/24/javascript-object/index.html">
+<meta property="og:site_name" content="Jacey&#39;s Journal">
+<meta property="og:description" content="对象创建对象的两种方式： 12345let user &#x3D; new Object(); &#x2F;&#x2F; 构造函数法let user &#x3D; &amp;#123;	name: &quot;Tom&quot;,	age: 20,&amp;#125;;                 &#x2F;&#x2F; 健&#x2F;值  属性的访问和设置值，删除变量，有两种方式： 12345678910111213141516&#x2F;&#x2F; method 1:user.name &#x3D;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-01-24T12:17:08.000Z">
+<meta property="article:modified_time" content="2021-01-24T12:17:08.000Z">
+<meta property="article:author" content="Jacey">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="programming">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://journal.codox.cn/2021/01/24/javascript-object/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh","comments":true,"permalink":"http://journal.codox.cn/2021/01/24/javascript-object/","path":"2021/01/24/javascript-object/","title":"Javascript之对象基础"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Javascript之对象基础 | Jacey's Journal</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jacey's Journal</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">我是乱写的 & 千万别当真</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E5%92%8C%E5%A4%8D%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">引用和复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">对象方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8-new"><span class="nav-number">4.</span> <span class="nav-text">构造器 new</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8%E7%9A%84return"><span class="nav-number">5.</span> <span class="nav-text">构造器的return</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E9%93%BE"><span class="nav-number">6.</span> <span class="nav-text">可选链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Symbol"><span class="nav-number">7.</span> <span class="nav-text">Symbol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Symbol-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">7.1.</span> <span class="nav-text">Symbol 的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80-symbol"><span class="nav-number">7.2.</span> <span class="nav-text">全局 symbol</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%8E%9F%E5%A7%8B%E5%80%BC"><span class="nav-number">8.</span> <span class="nav-text">对象和原始值</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jacey</p>
+  <div class="site-description" itemprop="description">IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh">
+    <link itemprop="mainEntityOfPage" href="http://journal.codox.cn/2021/01/24/javascript-object/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jacey">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jacey's Journal">
+      <meta itemprop="description" content="IT从业者，多年老司机。驾龄十余年，熟练驾驶Perl，Java等多种车辆，熟悉互联网路况。现供职于阿里，做域名/DNS相关coding。 <本站文章皆原创,所有权利均保留>">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Javascript之对象基础 | Jacey's Journal">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Javascript之对象基础
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2021-01-24 20:17:08" itemprop="dateCreated datePublished" datetime="2021-01-24T20:17:08+08:00">2021-01-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>创建对象的两种方式：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = <span class="keyword">new</span> <span class="title class_">Object</span>(); <span class="comment">// 构造函数法</span></span><br><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">	<span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">	<span class="attr">age</span>: <span class="number">20</span>,</span><br><span class="line">&#125;;                 <span class="comment">// 健/值</span></span><br></pre></td></tr></table></figure>
+
+<p>属性的访问和设置值，删除变量，有两种方式：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// method 1:</span></span><br><span class="line">user.<span class="property">name</span> = <span class="string">&quot;Jim&quot;</span>;  <span class="comment">// set</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user.<span class="property">name</span>);  <span class="comment">// get</span></span><br><span class="line"><span class="keyword">delete</span> user.<span class="property">name</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// method 2:</span></span><br><span class="line">user[<span class="string">&quot;name&quot;</span>] = <span class="string">&quot;jim&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user[<span class="string">&quot;name&quot;</span>]);</span><br><span class="line"><span class="keyword">delete</span> user[<span class="string">&quot;name&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// method 2好处：</span></span><br><span class="line"><span class="keyword">const</span> key = <span class="string">&quot;name&quot;</span>;</span><br><span class="line">user[key] = <span class="string">&quot;Jimmy&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user[key])</span><br><span class="line"><span class="comment">// *** 这种方式，可以将key用变量代替。方括号中的内容可以由计算得出。如：</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user[<span class="string">&quot;na&quot;</span> + <span class="string">&quot;me&quot;</span>]); </span><br></pre></td></tr></table></figure>
+
+<p>属性值的限制和简写：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在能过&#123;&#125;方式创建对象时，可使用多字词来做为属性的key</span></span><br><span class="line"><span class="keyword">const</span> user = &#123;</span><br><span class="line">	<span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">	<span class="string">&quot;come from&quot;</span>: <span class="string">&quot;China&quot;</span>,</span><br><span class="line">	<span class="attr">age</span>: <span class="number">22</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 但访问和设置值时，不能使用 &quot;.&quot; 来访问，如下是错误的：</span></span><br><span class="line">user.<span class="property">com</span> <span class="keyword">from</span> = <span class="string">&quot;New name&quot;</span>;  <span class="comment">//   &lt;--- 报错</span></span><br><span class="line"></span><br><span class="line">但可以使用方括号的方式：</span><br><span class="line">user[<span class="string">&quot;come from&quot;</span>] = <span class="string">&quot;US&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> key = <span class="string">&quot;come from&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user[key]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通变量名不能使用 let, in 等关键字，但属性名可以使用，无此限制：</span></span><br><span class="line"><span class="keyword">const</span> user = &#123;</span><br><span class="line">   <span class="attr">for</span>: <span class="number">123</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果创建的key/value名字相同，可简写。如：</span></span><br><span class="line"><span class="keyword">const</span> name = <span class="string">&quot;Tom&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> age = <span class="number">22</span>;</span><br><span class="line"><span class="keyword">const</span> user = &#123;</span><br><span class="line">	<span class="attr">name</span>:name,</span><br><span class="line">	<span class="attr">age</span>:age</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 可简写为：</span></span><br><span class="line"><span class="keyword">const</span> user = &#123;</span><br><span class="line">	name,</span><br><span class="line">	age,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 在函数中更方便使用：</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">makeUser</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		name,</span><br><span class="line">		age</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>循环获取对象：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">	<span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">	<span class="number">5</span>: <span class="number">55555</span>,</span><br><span class="line">	<span class="attr">age</span>: <span class="number">10</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 获取值，可使用 for…in来循环，如下：</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> k <span class="keyword">in</span> user) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(k);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*  输出时，整数属性的key会放在前面（已经转为了字符串型），其余按创建顺序：</span></span><br><span class="line"><span class="comment">5</span></span><br><span class="line"><span class="comment">name</span></span><br><span class="line"><span class="comment">age</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断一个key是否存在：</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;name&quot;</span> <span class="keyword">in</span> user);  <span class="comment">// output: true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="引用和复制"><a href="#引用和复制" class="headerlink" title="引用和复制"></a>引用和复制</h2><p>对象的值是引用。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user1 = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">10</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> user2 = user1;</span><br><span class="line"></span><br><span class="line">user2.<span class="property">age</span> = <span class="number">20</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user1.<span class="property">age</span>);  <span class="comment">// output: 20</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象的比较，是比较两个对象是否是引用了同一个对象。</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user1 == user2); <span class="comment">//output: true</span></span><br></pre></td></tr></table></figure>
+
+<p>如果要通过赋值，将两个对象分来，就需要使用克隆。javascript内置有Object.assign，这这个克隆不够深：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user1 = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="attr">child</span>:&#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&quot;apple&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> clone = &#123;&#125;;</span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">assign</span>(clone, user1);</span><br><span class="line"></span><br><span class="line">user1.<span class="property">name</span> = <span class="string">&quot;Jimmy&quot;</span>;</span><br><span class="line">user1.<span class="property">child</span>.<span class="property">name</span> = <span class="string">&quot;banana&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(clone);</span><br><span class="line"><span class="comment">// output: &#123; name: &#x27;Tom&#x27;, age: 10, child: &#123; name: &#x27;banana&#x27; &#125; &#125;</span></span><br><span class="line"><span class="comment">// 可看到第一次克隆了，但第二层仍是引用。</span></span><br></pre></td></tr></table></figure>
+
+<p>真正的深层克隆，可用 JavaScript 库 <a target="_blank" rel="noopener" href="https://lodash.com/">lodash</a> 中的 _.cloneDeep(obj) 函数：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">_ = <span class="built_in">require</span>(<span class="string">&#x27;lodash&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> user1 = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="attr">child</span>:&#123;</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&quot;apple&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> clone = &#123;&#125;;</span><br><span class="line">clone = _.<span class="title function_">cloneDeep</span>(user1);</span><br><span class="line"></span><br><span class="line">user1.<span class="property">name</span> = <span class="string">&quot;Jimmy&quot;</span>;</span><br><span class="line">user1.<span class="property">child</span>.<span class="property">name</span> = <span class="string">&quot;banana&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(clone);</span><br><span class="line"><span class="comment">// output: 可看到修改原对象，并没影响到克隆的新对象：</span></span><br><span class="line"><span class="comment">// &#123; name: &#x27;Tom&#x27;, age: 10, child: &#123; name: &#x27;apple&#x27; &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="对象方法"><a href="#对象方法" class="headerlink" title="对象方法"></a>对象方法</h2><p>可以给对象创建方法，类似其它语言的 class method:</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">22</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">user.<span class="property">sayHello</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">user.<span class="title function_">sayHello</span>();</span><br><span class="line"><span class="comment">// output:</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以把已存在的方法赋值给函数方法：</span></span><br><span class="line"></span><br><span class="line">hello  = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">user.<span class="property">sayHello</span> = hello;</span><br><span class="line">user.<span class="title function_">sayHello</span>();</span><br><span class="line"><span class="comment">// output:</span></span><br><span class="line"><span class="comment">// hello</span></span><br></pre></td></tr></table></figure>
+
+<p>类方法可写在类构造时：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">22</span>,</span><br><span class="line">    <span class="attr">sayHello</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello &quot;</span> + <span class="variable language_">this</span>.<span class="property">name</span>); <span class="comment">// 在对象里，可通过 this引用属性。（不加this会报错）</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">user.<span class="title function_">sayHello</span>();</span><br><span class="line"><span class="comment">// output:</span></span><br><span class="line"><span class="comment">// hello Tom</span></span><br></pre></td></tr></table></figure>
+
+<p>javascript 中的this，比其它语言中的this关键字更加宽范。他指定的内容是在运行时计算出来的。如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> user = &#123;<span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>&#125;;</span><br><span class="line"><span class="keyword">const</span> admin = &#123;<span class="attr">name</span>: <span class="string">&quot;boss&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sayHello</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello &quot;</span> + <span class="variable language_">this</span>.<span class="property">name</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">user.<span class="property">sayHi</span> = sayHello;</span><br><span class="line">admin.<span class="property">sayHi</span> = sayHello;</span><br><span class="line"></span><br><span class="line">user.<span class="title function_">sayHi</span>();</span><br><span class="line">admin.<span class="title function_">sayHi</span>();</span><br><span class="line"><span class="comment">// output:</span></span><br><span class="line"><span class="comment">// hello Tom</span></span><br><span class="line"><span class="comment">// hello boss</span></span><br></pre></td></tr></table></figure>
+
+<p>this 并没有严格的与某个对象绑定。在javascript中，this比较自由。</p>
+<p>注意：箭头头函数没有 this，如果在箭头函数中引用this，会取来自箭头函数外部的this，如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">  <span class="attr">firstName</span>: <span class="string">&quot;Ilya&quot;</span>,</span><br><span class="line">  <span class="title function_">sayHi</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="title function_">arrow</span> = (<span class="params"></span>) =&gt; <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">firstName</span>);</span><br><span class="line">    <span class="title function_">arrow</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">user.<span class="title function_">sayHi</span>(); <span class="comment">// Ilya</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="构造器-new"><a href="#构造器-new" class="headerlink" title="构造器 new"></a>构造器 new</h2><p>除了常规的 {…}来创建对象，也可以使用构造器。对于要多次创建的对象，用构造器更便捷。构造器函数实际上是个常规函数，有两个约定：</p>
+<ol>
+<li>以大写字母开头</li>
+<li>只能由 new 来执行</li>
+</ol>
+<p>构造器执行时，由三个流程：</p>
+<ol>
+<li>创建空对象{}，并赋值给 this</li>
+<li>执行函数体。</li>
+<li>返回this</li>
+</ol>
+<p>如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">User</span>(<span class="params">name</span>) &#123;</span><br><span class="line">		<span class="comment">// this = &#123;&#125;</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">role</span> = <span class="string">&quot;worker&quot;</span>;</span><br><span class="line">		<span class="comment">// return this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> u1 = <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(u1);  <span class="comment">// User &#123; name: &#x27;Tom&#x27;, role: &#x27;worker&#x27; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>new 可以让任何函数以这种方式执行。但一般我们用于构建函数时，以大写字母命名，由new执行。</p>
+<p>如果任何函数都可以被new来使用，那如何判断这个调用，是否是被new创建的呢？在函数内部，可使用  new.target 函数来测试是否是由new来创建的。如果不是new创建的，由返回undefined；否则，返回函数。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">User</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">new</span>.<span class="property">target</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">role</span> = <span class="string">&quot;worker&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> u1 =  <span class="title class_">User</span>(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(u1);  <span class="comment">// User &#123; name: &#x27;Tom&#x27;, role: &#x27;worker&#x27; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="构造器的return"><a href="#构造器的return" class="headerlink" title="构造器的return"></a>构造器的return</h2><p>构造器一般无 return 语句</p>
+<ul>
+<li>如果构造器返回一个对象，则使用这个对象返回，而代替this</li>
+<li>如果构造器返回一个原始类型，则忽略。就像没这句一亲。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">User1</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">name</span>: <span class="string">&quot;foo&quot;</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">User2</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;bar&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> u1 = <span class="keyword">new</span> <span class="title class_">User1</span>(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> u2 = <span class="keyword">new</span> <span class="title class_">User2</span>(<span class="string">&quot;Tom&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(u1); <span class="comment">// &#123; name: &#x27;foo&#x27; &#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(u2); <span class="comment">// User2 &#123; name: &#x27;Tom&#x27; &#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="可选链"><a href="#可选链" class="headerlink" title="可选链"></a>可选链</h2><p>对于一个对象，我们可能会像这样的方式访问其属性值：<a target="_blank" rel="noopener" href="http://user.address.city.name/">user.address.city.name</a>。但有可能其address未设置，而直接访问 user.address.city.name 就会报错，而我们想其返回undefined亦或null.</p>
+<p>我们可以在user到name中，从根一步步的判断是否存在，存在再取下一步。这种方式可行，但代码太难看。</p>
+<p>在javascript中有个可选链的操作，可优雅的达到此目的，使用方法为 value?.prop，他执行下面的操作：</p>
+<ul>
+<li>如果value为undefined或null，则返回undefined</li>
+<li>如果value存在，则返回 value.prop</li>
+</ul>
+<p>如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> user = &#123;</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">        <span class="attr">city</span>: &#123;</span><br><span class="line">            <span class="attr">name</span>: <span class="string">&quot;beijing&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user?.<span class="property">addr</span>?.<span class="property">city</span>?.<span class="property">name</span>);    <span class="comment">// undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user?.<span class="property">address</span>?.<span class="property">city</span>?.<span class="property">name</span>); <span class="comment">// beijing</span></span><br></pre></td></tr></table></figure>
+
+<p>可选链可用于函数和计算属性：</p>
+<p>?.()或  ?.[]</p>
+<p>也可用于删除属性：</p>
+<p>delete user?.address</p>
+<p>总之，可选链 <code>?.</code> 语法有三种形式：</p>
+<ol>
+<li><code>obj?.prop</code> —— 如果 <code>obj</code> 存在则返回 <code>obj.prop</code>，否则返回 <code>undefined</code>。</li>
+<li><code>obj?.[prop]</code> —— 如果 <code>obj</code> 存在则返回 <code>obj[prop]</code>，否则返回 <code>undefined</code>。</li>
+<li><code>obj.method?.()</code> —— 如果 <code>obj.method</code> 存在则调用 <code>obj.method()</code>，否则返回 <code>undefined</code>。</li>
+</ol>
+<h2 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h2><p>复习一下javascript中的原始类型，共有7种：</p>
+<ul>
+<li>string</li>
+<li>number</li>
+<li>bigint</li>
+<li>boolean</li>
+<li>symbol</li>
+<li>undefined</li>
+<li>null</li>
+</ul>
+<p>Symbol 的值是一个唯一的标识符，每次调用时不同。他在内部是不同的值，但在打印时，他的默认的 toString() 方法只展示其信息和id标识，并不显示唯一的标识信息值。如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> id1 = <span class="title class_">Symbol</span>(<span class="string">&quot;id&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> id2 = <span class="title class_">Symbol</span>(<span class="string">&quot;id&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(id1);         <span class="comment">// Symbol(id)</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(id1 == id2);  <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> id = <span class="title class_">Symbol</span>(<span class="string">&quot;id desc&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(id);                <span class="comment">// Symbol(id desc)</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(id.<span class="title function_">toString</span>());     <span class="comment">// Symbol(id desc)</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(id.<span class="property">description</span>);    <span class="comment">// id desc</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Symbol-的作用"><a href="#Symbol-的作用" class="headerlink" title="Symbol 的作用"></a>Symbol 的作用</h3><p>Symbol 的最大作用，是允许我们创建对象的隐藏属性。比如我们引用第三方代码中的user对象，但我们想添加个标识符，又不想破坏原有代码，我们就可以起一个特殊的键来存放我们的属性值，而原有代码因不知道这个键，而不会感知到我们添加了内容。同时，Symbol对象在迭代时，会被忽略。</p>
+<p>如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = &#123;     <span class="comment">// 第三方代码中的数据</span></span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">gender  = <span class="title class_">Symbol</span>(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">user.<span class="property">gender</span> = <span class="string">&quot;male&quot;</span>;   <span class="comment">// 添加一个属性</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(user.<span class="property">gender</span>);    <span class="comment">// male</span></span><br></pre></td></tr></table></figure>
+
+<p>在迭代时，Symbol对象会被忽略，如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> id1 = <span class="title class_">Symbol</span>(<span class="string">&quot;id1&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    [id1]: <span class="string">&quot;333&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> id2 = <span class="title class_">Symbol</span>(<span class="string">&quot;id2&quot;</span>);</span><br><span class="line">user[id2] = id2;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="title function_">keys</span>(user)); <span class="comment">// [ &#x27;name&#x27; ]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> k <span class="keyword">in</span> user) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(k);             <span class="comment">// name</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当克隆一个对象时， Symbol 会被克隆：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> user = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    [<span class="title class_">Symbol</span>(<span class="string">&quot;id&quot;</span>)]: <span class="string">&quot;333&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> clone = &#123;&#125;;</span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">assign</span>(clone, user);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(clone); <span class="comment">// &#123; name: &#x27;Tom&#x27;, [Symbol(id)]: &#x27;333&#x27; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="全局-symbol"><a href="#全局-symbol" class="headerlink" title="全局 symbol"></a>全局 symbol</h3><p>系统中有个全局 Symbol 符号表。当通过 Symbol.for(key)来创建Symbol时，他会创建并返回一个Symbol对象，同时记录在全局符号表中。当符号表中存在同名的Symbol时，则会返回已存在的Symbol。</p>
+<p>反之，也可通过 Symbol.keyFor(sym:symbol)来把Symbol转换为标识符。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s1 = <span class="title class_">Symbol</span>.<span class="title function_">for</span>(<span class="string">&quot;id&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> s2 = <span class="title class_">Symbol</span>.<span class="title function_">for</span>(<span class="string">&quot;id&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> s3 = <span class="title class_">Symbol</span>.<span class="title function_">for</span>(<span class="string">&quot;id3&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(s1 == s2);      <span class="comment">// true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(s1 == s3);      <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sss = <span class="title class_">Symbol</span>(<span class="string">&quot;symbol not exists&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Symbol</span>.<span class="title function_">keyFor</span>(s1));   <span class="comment">// id</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Symbol</span>.<span class="title function_">keyFor</span>(sss));  <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="对象和原始值"><a href="#对象和原始值" class="headerlink" title="对象和原始值"></a>对象和原始值</h2><p>JavaScript 允许我们像使用对象一样使用原始类型。</p>
+<p>原始类型是一个原始值，就是7种原始类型中的任何一种的值。</p>
+<p>对象，可以存储多个属性；可以使用{…}的方式创建且可以包含函数</p>
+<p>原始类型，有很多的方法，而为了实现这些操作方法，内部通过包装器来实现。而包装器只在使用期间存在，用后即毁。如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> str = <span class="string">&quot;Hello world!&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str.<span class="title function_">toUpperCase</span>());<span class="comment">// HELLO WORLD!</span></span><br></pre></td></tr></table></figure>
+
+<p>在访问字符串的 toUpperCase方法时，</p>
+<ol>
+<li>str是个原始值。访问其方法，需要创建一个包装对象，此对象有其用到的方法</li>
+<li>包装器的方法被执行，将返回值给调用者。</li>
+<li>中间的包装器对象销毁</li>
+</ol>
+<p>注意：原始类型的构造器仅供内部使用，自己的代码中不要使用，容易出现问题。而不在new的构造方法可以使用。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`typeof new Number(0): <span class="subst">$&#123;<span class="keyword">typeof</span> <span class="keyword">new</span> <span class="built_in">Number</span>(<span class="number">0</span>)&#125;</span>`</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`typeof     Number(0): <span class="subst">$&#123;<span class="keyword">typeof</span> <span class="built_in">Number</span>(<span class="number">0</span>)&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">new</span> <span class="title class_">Number</span>(<span class="number">0</span>)) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;new Number(0) is TRUE&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;new Number(0) is false&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ( <span class="title class_">Number</span>(<span class="number">0</span>)) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;    Number(0) is TRUE&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;    Number(0) is false&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">typeof new Number(0): object</span></span><br><span class="line"><span class="comment">typeof     Number(0): number</span></span><br><span class="line"><span class="comment">new Number(0) is TRUE</span></span><br><span class="line"><span class="comment">    Number(0) is false</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>undefined和null没包装器，也没任何方法。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/javascript/" rel="tag"># javascript</a>
+              <a href="/tags/programming/" rel="tag"># programming</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/10/07/maven-life-cycle/" rel="prev" title="maven-life-cycle">
+                  <i class="fa fa-chevron-left"></i> maven-life-cycle
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jacey</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
